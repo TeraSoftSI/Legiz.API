@@ -1,1 +1,0 @@
-Implementar features y eliminar el README
