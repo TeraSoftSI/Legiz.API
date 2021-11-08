@@ -1,7 +1,6 @@
 package com.legiz.terasoftproject.userProfile.resource;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +8,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@With
 public class CreateLawyerResource {
 
     @NotNull
