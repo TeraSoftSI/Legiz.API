@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LawyerRepository extends JpaRepository<Lawyer, Long> {
-    Lawyer findByUserName(String userName);
+    Lawyer findByUsername(String username);
+    Lawyer findByEmail(String email);
 }

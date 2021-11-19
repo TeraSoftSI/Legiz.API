@@ -9,4 +9,7 @@ public class MappingConfiguration {
     public LawyerMapper lawyerMapper() {
         return new LawyerMapper();
     }
+
+    @Bean
+    public CustomerMapper customerMapper() { return new CustomerMapper(); }
 }

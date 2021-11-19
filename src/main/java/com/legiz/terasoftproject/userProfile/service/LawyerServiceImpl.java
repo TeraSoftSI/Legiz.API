@@ -1,5 +1,7 @@
 package com.legiz.terasoftproject.userProfile.service;
 
+import com.legiz.terasoftproject.payment.domain.model.entity.Subscription;
+import com.legiz.terasoftproject.payment.domain.persistence.SubscriptionRepository;
 import com.legiz.terasoftproject.shared.exception.ResourceNotFoundException;
 import com.legiz.terasoftproject.shared.exception.ResourceValidationException;
 import com.legiz.terasoftproject.userProfile.domain.model.entity.Lawyer;
@@ -20,10 +22,12 @@ public class LawyerServiceImpl implements LawyerService {
 
     private static final String ENTITY = "Lawyer";
     private LawyerRepository lawyerRepository;
+    private SubscriptionRepository subscriptionRepository;
     private final Validator validator;
 
-    public LawyerServiceImpl(LawyerRepository lawyerRepository, Validator validator) {
+    public LawyerServiceImpl(LawyerRepository lawyerRepository, SubscriptionRepository subscriptionRepository, Validator validator) {
         this.lawyerRepository = lawyerRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.validator = validator;
     }
 
@@ -50,10 +54,21 @@ public class LawyerServiceImpl implements LawyerService {
         if (!violations.isEmpty())
             throw new ResourceValidationException(ENTITY, violations);
 
-        Lawyer lawyerWithUserName = lawyerRepository.findByUserName(request.getUserName());
+        // Validate Subscription Id
+        if (!subscriptionRepository.existsById(request.getSubscription().getId()))
+            throw new ResourceNotFoundException("Subscription", request.getSubscription().getId());
 
-        if (lawyerWithUserName != null)
-            throw new ResourceValidationException(ENTITY, "A Lawyer with the same user-name already exists.");
+        // Validate Lawyer with != Username
+        Lawyer lawyerWithUsername = lawyerRepository.findByUsername(request.getUsername());
+
+        if (lawyerWithUsername != null)
+            throw new ResourceValidationException(ENTITY, "A Lawyer with the same username already exists.");
+
+        // Validate Lawyer with != Email
+        Lawyer lawyerWithEmail = lawyerRepository.findByEmail(request.getEmail());
+
+        if (lawyerWithEmail != null)
+            throw new ResourceValidationException(ENTITY, "A Lawyer with the same email already exists.");
 
         return lawyerRepository.save(request);
     }
@@ -62,19 +77,32 @@ public class LawyerServiceImpl implements LawyerService {
     public Lawyer update(Long lawyerId, Lawyer request) {
         Set<ConstraintViolation<Lawyer>> violations = validator.validate(request);
 
-        Lawyer lawyerWithUserName = lawyerRepository.findByUserName(request.getUserName());
-
-        if (lawyerWithUserName != null && lawyerWithUserName.getId() != request.getId())
-            throw new ResourceValidationException(ENTITY, "A Lawyer with the same user-name already exists.");
-
         if (!violations.isEmpty())
             throw new ResourceValidationException(ENTITY, violations);
 
+        //Validate Subscription Id
+        if (!subscriptionRepository.existsById(request.getSubscription().getId()))
+            throw new ResourceNotFoundException("Subscription", request.getSubscription().getId());
+        Subscription subscription = subscriptionRepository.getById(request.getSubscription().getId());
+
+        // Validate Lawyer with != Username
+        Lawyer lawyerWithUsername = lawyerRepository.findByUsername(request.getUsername());
+
+        if (lawyerWithUsername != null && lawyerWithUsername.getId() != request.getId())
+            throw new ResourceValidationException(ENTITY, "A Lawyer with the same username already exists.");
+
+        // Validate Lawyer with != Email
+        Lawyer lawyerWithEmail = lawyerRepository.findByEmail(request.getEmail());
+
+        if (lawyerWithEmail != null && lawyerWithEmail.getEmail() != request.getEmail())
+            throw new ResourceValidationException(ENTITY, "A Lawyer with the same email already exists.");
 
         return lawyerRepository.findById(lawyerId).map(lawyer -> {
-            lawyer.setUserName(request.getUserName());
+            lawyer.setUsername(request.getUsername());
             lawyer.setPassword(request.getPassword());
             lawyer.setLawyerName(request.getLawyerName());
+            lawyer.setLawyerLastName(request.getLawyerLastName());
+            lawyer.setSubscription(subscription);
             return lawyerRepository.save(lawyer);
         }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, lawyerId));
     }

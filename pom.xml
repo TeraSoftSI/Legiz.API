@@ -107,7 +107,6 @@
             <artifactId>springdoc-openapi-data-rest</artifactId>
             <version>1.5.12</version>
         </dependency>
-
     </dependencies>
 
     <build>
