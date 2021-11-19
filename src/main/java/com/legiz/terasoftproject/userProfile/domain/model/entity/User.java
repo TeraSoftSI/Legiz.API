@@ -3,6 +3,7 @@ package com.legiz.terasoftproject.userProfile.domain.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +25,17 @@ public abstract class User {
     @NotNull
     @NotBlank
     @Column(unique = true)
-    private String userName;
+    private String username;
 
     @NotNull
     @NotBlank
     private String password;
+
+    @NotNull
+    @NotBlank
+    @Email
+    @Column(unique = true)
+    private String email;
+
 
 }
