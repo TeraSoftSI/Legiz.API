@@ -5,6 +5,7 @@ import com.legiz.terasoftproject.userProfile.domain.service.LawyerService;
 import com.legiz.terasoftproject.userProfile.mapping.LawyerMapper;
 import com.legiz.terasoftproject.userProfile.resource.CreateLawyerResource;
 import com.legiz.terasoftproject.userProfile.resource.LawyerResource;
+import com.legiz.terasoftproject.userProfile.resource.LawyerSubscriptionResource;
 import com.legiz.terasoftproject.userProfile.resource.UpdateLawyerResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,8 +49,8 @@ public class LawyerController {
             )
     })
     @GetMapping("")
-    public Page<LawyerResource> getAllLawyer(Pageable pageable) {
-        return mapper.modelListToPage(lawyerService.getAll(), pageable);
+    public Page<LawyerSubscriptionResource> getAllLawyer(Pageable pageable) {
+        return mapper.modelListToPageLS(lawyerService.getAll(), pageable);
     }
 
     @Operation(summary = "Get Lawyer By Id", description = "Get Lawyer already stored by Id")
@@ -68,8 +69,8 @@ public class LawyerController {
             )
     })
     @GetMapping("{lawyerId}")
-    public LawyerResource getLawyerById(@PathVariable Long lawyerId) {
-        return mapper.toResource(lawyerService.getById(lawyerId));
+    public LawyerSubscriptionResource getLawyerById(@PathVariable Long lawyerId) {
+        return mapper.toResourceLS(lawyerService.getById(lawyerId));
     }
 
     @Operation(summary = "Create Lawyer", description = "Create a new Lawyer")
@@ -88,8 +89,8 @@ public class LawyerController {
             )
     })
     @PostMapping
-    public LawyerResource createLawyer(@RequestBody CreateLawyerResource request) {
-        return mapper.toResource(lawyerService.create(mapper.toModel(request)));
+    public LawyerSubscriptionResource createLawyer(@RequestBody CreateLawyerResource request) {
+        return mapper.toResourceLS(lawyerService.create(mapper.toModel(request)));
     }
 
     @Operation(summary = "Update Lawyer", description = "Update Lawyer already stored by Id")
@@ -108,8 +109,8 @@ public class LawyerController {
             )
     })
     @PutMapping("{lawyerId}")
-    public LawyerResource updateLawyer(@PathVariable Long lawyerId, @RequestBody UpdateLawyerResource request) {
-        return mapper.toResource(lawyerService.update(lawyerId, mapper.toModel(request)));
+    public LawyerSubscriptionResource updateLawyer(@PathVariable Long lawyerId, @RequestBody UpdateLawyerResource request) {
+        return mapper.toResourceLS(lawyerService.update(lawyerId, mapper.toModel(request)));
     }
 
     @Operation(summary = "Delete Lawyer", description = "Delete Lawyer already stored")
