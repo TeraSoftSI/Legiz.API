@@ -1,9 +1,8 @@
 package com.legiz.terasoftproject.userProfile.api;
 
-import com.legiz.terasoftproject.userProfile.domain.model.entity.Lawyer;
 import com.legiz.terasoftproject.userProfile.domain.service.LawyerService;
+import com.legiz.terasoftproject.userProfile.domain.service.communication.RegisterLawyerRequest;
 import com.legiz.terasoftproject.userProfile.mapping.LawyerMapper;
-import com.legiz.terasoftproject.userProfile.resource.CreateLawyerResource;
 import com.legiz.terasoftproject.userProfile.resource.LawyerResource;
 import com.legiz.terasoftproject.userProfile.resource.LawyerSubscriptionResource;
 import com.legiz.terasoftproject.userProfile.resource.UpdateLawyerResource;
@@ -16,10 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Lawyers")
 @RestController
 @RequestMapping("/api/v1/lawyers")
@@ -48,9 +47,10 @@ public class LawyerController {
                     }
             )
     })
-    @GetMapping("")
+    @GetMapping
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public Page<LawyerSubscriptionResource> getAllLawyer(Pageable pageable) {
-        return mapper.modelListToPageLS(lawyerService.getAll(), pageable);
+        return mapper.modelListToPage(lawyerService.getAll(), pageable);
     }
 
     @Operation(summary = "Get Lawyer By Id", description = "Get Lawyer already stored by Id")
@@ -68,9 +68,10 @@ public class LawyerController {
                     }
             )
     })
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     @GetMapping("{lawyerId}")
     public LawyerSubscriptionResource getLawyerById(@PathVariable Long lawyerId) {
-        return mapper.toResourceLS(lawyerService.getById(lawyerId));
+        return mapper.toResource(lawyerService.getById(lawyerId));
     }
 
     @Operation(summary = "Create Lawyer", description = "Create a new Lawyer")
@@ -82,15 +83,15 @@ public class LawyerController {
                             @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
-                                            implementation = CreateLawyerResource.class
+                                            implementation = RegisterLawyerRequest.class
                                     )
                             )
                     }
             )
     })
-    @PostMapping
-    public LawyerSubscriptionResource createLawyer(@RequestBody CreateLawyerResource request) {
-        return mapper.toResourceLS(lawyerService.create(mapper.toModel(request)));
+    @PostMapping("/auth/sign-up")
+    public ResponseEntity<?> registerLawyer(@RequestBody RegisterLawyerRequest request) {
+        return lawyerService.register(request);
     }
 
     @Operation(summary = "Update Lawyer", description = "Update Lawyer already stored by Id")
@@ -108,9 +109,10 @@ public class LawyerController {
                     }
             )
     })
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     @PutMapping("{lawyerId}")
-    public LawyerSubscriptionResource updateLawyer(@PathVariable Long lawyerId, @RequestBody UpdateLawyerResource request) {
-        return mapper.toResourceLS(lawyerService.update(lawyerId, mapper.toModel(request)));
+    public ResponseEntity<?> updateLawyer(@PathVariable Long lawyerId, @RequestBody UpdateLawyerResource request) {
+        return lawyerService.update(lawyerId,request);
     }
 
     @Operation(summary = "Delete Lawyer", description = "Delete Lawyer already stored")
@@ -125,6 +127,7 @@ public class LawyerController {
                     }
             )
     })
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     @DeleteMapping("{lawyerId}")
     public ResponseEntity<?> deleteLawyer(@PathVariable Long lawyerId) {
         return lawyerService.delete(lawyerId);

@@ -3,6 +3,8 @@ package com.legiz.terasoftproject.userProfile.resource;
 import com.legiz.terasoftproject.payment.resource.SubscriptionResource;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,4 +18,5 @@ public class LawyerSubscriptionResource {
     private String lawyerName;
     private String lawyerLastName;
     private SubscriptionResource subscription;
+    private List<String> roles;
 }

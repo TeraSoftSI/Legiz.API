@@ -14,19 +14,12 @@ public class UpdateCustomLegalCaseResource {
 
     private String statusLawService;
 
-    @NotBlank
-    @NotNull
     private String title;
 
-    @NotNull
-    @NotBlank
     private String startAt;
 
-    @NotNull
-    @NotBlank
     private String finishAt;
 
-    @NotNull
-    @NotBlank
+
     private String typeMeet;
 }

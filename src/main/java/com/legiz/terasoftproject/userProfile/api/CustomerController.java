@@ -1,9 +1,8 @@
 package com.legiz.terasoftproject.userProfile.api;
 
-import com.legiz.terasoftproject.userProfile.domain.model.entity.Customer;
 import com.legiz.terasoftproject.userProfile.domain.service.CustomerService;
+import com.legiz.terasoftproject.userProfile.domain.service.communication.RegisterCustomerRequest;
 import com.legiz.terasoftproject.userProfile.mapping.CustomerMapper;
-import com.legiz.terasoftproject.userProfile.resource.CreateCustomerResource;
 import com.legiz.terasoftproject.userProfile.resource.CustomerResource;
 import com.legiz.terasoftproject.userProfile.resource.UpdateCustomerResource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +14,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Customers")
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -45,7 +48,8 @@ public class CustomerController {
                     }
             )
     })
-    @GetMapping("")
+    @GetMapping
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public Page<CustomerResource> getAllCustomer(Pageable pageable) {
         return mapper.modelListToPage(customerService.getAll(), pageable);
     }
@@ -66,28 +70,29 @@ public class CustomerController {
             )
     })
     @GetMapping("{customerId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public CustomerResource getCustomerById(@PathVariable Long customerId) {
         return mapper.toResource(customerService.getById(customerId));
     }
 
-    @Operation(summary = "Create Customer", description = "Create a new Customer")
+    @Operation(summary = "Register Customer", description = "Register a new Customer")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Customer created",
+                    description = "Customer registered",
                     content = {
                             @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
-                                            implementation = CreateCustomerResource.class
+                                            implementation = RegisterCustomerRequest.class
                                     )
                             )
                     }
             )
     })
-    @PostMapping
-    public CustomerResource createCustomer(@RequestBody CreateCustomerResource request) {
-        return mapper.toResource(customerService.create(mapper.toModel(request)));
+    @PostMapping("/auth/sign-up")
+    public ResponseEntity<?> registerCustomer(@Valid @RequestBody RegisterCustomerRequest request) {
+        return customerService.register(request);
     }
 
     @Operation(summary = "Update Customer", description = "Update Customer already stored by Id")
@@ -106,6 +111,7 @@ public class CustomerController {
             )
     })
     @PutMapping("{customerId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public CustomerResource updateCustomer(@PathVariable Long customerId, @RequestBody UpdateCustomerResource request) {
         return mapper.toResource(customerService.update(customerId, mapper.toModel(request)));
     }
@@ -123,6 +129,7 @@ public class CustomerController {
             )
     })
     @DeleteMapping("{customerId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
         return customerService.delete(customerId);
     }

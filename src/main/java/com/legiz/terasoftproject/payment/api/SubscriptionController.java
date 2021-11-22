@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Subscriptions")
 @RestController
 @RequestMapping("/api/v1/subscriptions")
@@ -44,6 +46,7 @@ public class SubscriptionController {
             )
     })
     @GetMapping("")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public Page<SubscriptionResource> getAllSubscription(Pageable pageable) {
         return mapper.modelListToPage(subscriptionService.getAll(), pageable);
     }
@@ -64,6 +67,7 @@ public class SubscriptionController {
             )
     })
     @GetMapping("{subscriptionId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public SubscriptionResource getSubscriptionById(@PathVariable Long subscriptionId) {
         return mapper.toResource(subscriptionService.getById(subscriptionId));
     }
@@ -84,6 +88,7 @@ public class SubscriptionController {
             )
     })
     @PostMapping
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public SubscriptionResource createSubscription(@RequestBody CreateSubscriptionResource request) {
         return mapper.toResource(subscriptionService.create(mapper.toModel(request)));
     }
@@ -104,6 +109,7 @@ public class SubscriptionController {
             )
     })
     @PutMapping("{subscriptionId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public SubscriptionResource updateSubscription(@PathVariable Long subscriptionId, @RequestBody UpdateSubscriptionResource request) {
         return mapper.toResource(subscriptionService.update(subscriptionId, mapper.toModel(request)));
     }
@@ -121,6 +127,7 @@ public class SubscriptionController {
             )
     })
     @DeleteMapping("{subscriptionId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public ResponseEntity<?> deleteSubscription(@PathVariable Long subscriptionId) {
         return subscriptionService.delete(subscriptionId);
     }

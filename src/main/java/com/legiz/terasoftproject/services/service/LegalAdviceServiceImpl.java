@@ -63,6 +63,7 @@ public class LegalAdviceServiceImpl implements LegalAdviceService {
             throw new ResourceValidationException(ENTITY, violations);
 
         return legalAdviceRepository.findById(legalAdviceId).map(legalAdvice -> {
+            legalAdvice.setTitle(request.getTitle());
             legalAdvice.setDescription(request.getDescription());
             legalAdvice.setStatusLawService(request.getStatusLawService());
             return legalAdviceRepository.save(legalAdvice);

@@ -18,7 +18,9 @@ public class CustomLegalCaseMapper implements Serializable {
     @Autowired
     private EnhancedModelMapper mapper;
 
-    public CustomLegalCaseResource toResource(CustomLegalCase model) { return mapper.map(model, CustomLegalCaseResource.class); }
+    public CustomLegalCaseResource toResource(CustomLegalCase model) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
+        return mapper.map(model, CustomLegalCaseResource.class); }
 
     public Page<CustomLegalCaseResource> modelListToPage(List<CustomLegalCase> modelList, Pageable pageable) {
         return new PageImpl<>(mapper.mapList(modelList, CustomLegalCaseResource.class),
@@ -27,8 +29,11 @@ public class CustomLegalCaseMapper implements Serializable {
     }
 
     public CustomLegalCase toModel(CreateCustomLegalCaseResource resource) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         return mapper.map(resource, CustomLegalCase.class);
     }
 
-    public CustomLegalCase toModel(UpdateCustomLegalCaseResource resource) { return mapper.map(resource, CustomLegalCase.class); }
+    public CustomLegalCase toModel(UpdateCustomLegalCaseResource resource) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
+        return mapper.map(resource, CustomLegalCase.class); }
 }

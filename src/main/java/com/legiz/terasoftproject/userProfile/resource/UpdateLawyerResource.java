@@ -14,27 +14,16 @@ import javax.validation.constraints.NotNull;
 @With
 public class UpdateLawyerResource {
 
-    @NotNull
-    @NotBlank
+    private String username;
     private String password;
-
-    @Email
-    @NotBlank
-    @NotNull
     private String email;
 
-    @NotNull
-    @NotBlank
     private String lawyerName;
 
-    @NotNull
-    @NotBlank
     private String lawyerLastName;
 
     private Long priceLegalAdvice;
 
     private Long priceCustomLegalCase;
 
-    @NotNull
-    private int subscriptionId;
 }
