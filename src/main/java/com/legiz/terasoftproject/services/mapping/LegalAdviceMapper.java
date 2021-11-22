@@ -20,10 +20,8 @@ public class LegalAdviceMapper implements Serializable {
     private EnhancedModelMapper mapper;
 
 
-
-
     public LegalAdviceResource toResource(LegalAdvice model) {
-
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         return mapper.map(model, LegalAdviceResource.class); }
 
     public Page<LegalAdviceResource> modelListToPage(List<LegalAdvice> modelList, Pageable pageable) {
@@ -33,11 +31,11 @@ public class LegalAdviceMapper implements Serializable {
     }
 
     public LegalAdvice toModel(CreateLegalAdviceResource resource) {
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         mapper.getConfiguration().setAmbiguityIgnored(true);
         return mapper.map(resource, LegalAdvice.class);
     }
 
     public LegalAdvice toModel(UpdateLegalAdviceResource resource) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         return mapper.map(resource, LegalAdvice.class); }
 }

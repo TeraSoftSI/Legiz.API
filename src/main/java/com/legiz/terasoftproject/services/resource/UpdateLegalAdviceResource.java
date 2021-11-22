@@ -15,12 +15,7 @@ public class UpdateLegalAdviceResource {
 
     private String statusLawService;
 
-    @NotBlank
-    @NotNull
     private String title;
 
-    @NotNull
-    @NotBlank
-    @Lob
     private String description;
 }
