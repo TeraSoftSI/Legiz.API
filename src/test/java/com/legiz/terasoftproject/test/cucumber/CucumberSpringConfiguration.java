@@ -7,7 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @CucumberContextConfiguration
-@SpringBootTest(classes = TerasoftProjectApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = TerasoftProjectApplication.class, loader = SpringBootContextLoader.class)
+@SpringBootTest(
+        classes = TerasoftProjectApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(
+        classes = TerasoftProjectApplication.class,
+        loader = SpringBootContextLoader.class)
 public class CucumberSpringConfiguration {
 }
