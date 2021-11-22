@@ -13,24 +13,13 @@ import javax.validation.constraints.NotNull;
 @With
 public class UpdateCustomerResource {
 
-    @NotNull
-    @NotBlank
     private String username;
 
-    @NotNull
-    @NotBlank
     private String password;
 
-    @Email
-    @NotBlank
-    @NotNull
     private String email;
 
-    @NotNull
-    @NotBlank
     private String customerName;
 
-    @NotNull
-    @NotBlank
     private String customerLastName;
 }

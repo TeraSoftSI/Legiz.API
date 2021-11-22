@@ -25,27 +25,27 @@ public class LawService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Enumerated(EnumType.STRING)
-    private StatusLawService statusLawService;
+    protected StatusLawService statusLawService;
 
     @NotBlank
     @NotNull
-    private String title;
+    protected String title;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "user_lawyer_id", nullable = true)
     @JsonIgnore
-    private Lawyer lawyer;
+    protected Lawyer lawyer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "user_customer_id", nullable = true)
     @JsonIgnore
-    private Customer customer;
+    protected Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "document_id", nullable = true)
     @JsonIgnore
-    private LawDocument document;
+    protected LawDocument document;
 }

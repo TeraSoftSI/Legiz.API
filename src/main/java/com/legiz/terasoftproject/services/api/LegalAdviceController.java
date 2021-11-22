@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "LegalAdvices")
 @RestController
 @RequestMapping("/api/v1/legaladvices")
@@ -47,6 +49,7 @@ public class LegalAdviceController {
             )
     })
     @GetMapping("")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public Page<LegalAdviceResource> getAllLegalAdvice(Pageable pageable) {
         return mapper.modelListToPage(legalAdviceService.getAll(), pageable);
     }
@@ -67,6 +70,7 @@ public class LegalAdviceController {
             )
     })
     @GetMapping("{legaladviceId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public LegalAdviceResource getLegalAdviceById(@PathVariable Long legaladviceId) {
         return mapper.toResource(legalAdviceService.getById(legaladviceId));
     }
@@ -87,6 +91,7 @@ public class LegalAdviceController {
             )
     })
     @PostMapping
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public LegalAdviceResource createLegalAdvice(@RequestBody CreateLegalAdviceResource request) {
         return mapper.toResource(legalAdviceService.create(mapper.toModel(request)));
     }
@@ -107,6 +112,7 @@ public class LegalAdviceController {
             )
     })
     @PutMapping("{legaladviceId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public LegalAdviceResource updateLegalAdvice(@PathVariable Long legaladviceId, @RequestBody UpdateLegalAdviceResource request) {
         return mapper.toResource(legalAdviceService.update(legaladviceId, mapper.toModel(request)));
     }
@@ -124,6 +130,7 @@ public class LegalAdviceController {
             )
     })
     @DeleteMapping("{legaladviceId}")
+    @PreAuthorize("hasRole('LAWYER') or hasRole('CUSTOMER')")
     public ResponseEntity<?> deleteLegalAdvice(@PathVariable Long legaladviceId) {
         return legalAdviceService.delete(legaladviceId);
     }
