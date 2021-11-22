@@ -14,4 +14,5 @@ public class CreateLawDocumentResource {
     @NotNull
     @NotBlank
     private String title;
+    private String path;
 }
